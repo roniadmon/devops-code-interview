@@ -20,7 +20,7 @@ Create a script to clean up old database snapshots.
     DELETE /api/v1/snapshots/:id
     ```
     <aside class="warning">
-    `:exclamation:` after removing snapshot there is no way to bring it back
+    :exclamation: after removing snapshot there is no way to bring it back
     </aside>
 
 ### Exercise
