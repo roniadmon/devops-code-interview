@@ -1,11 +1,13 @@
+import sys
 import requests
 import json
 from datetime import datetime as dt
 
-server = 'https://5dbf2fb9e295da001400b4cc.mockapi.io'
-snapshots_path = '/api/v1/snapshots/'
 time_format='%Y-%m-%dT%H:%M:%S.%fZ'
 databaseName='databaseName'
+creation='createdAt'
+snapshots_path = None
+server= None
 
 def get_json_data():
     response = requests.get(server+snapshots_path)
@@ -18,7 +20,7 @@ def get_json_data():
 def list_all_by_DB():
     snapshots={}
     json=get_json_data()
-    time_sorted_snaps = sorted(json, key=lambda x: dt.strptime(x['createdAt'], time_format), reverse=True)
+    time_sorted_snaps = sorted(json, key=lambda x: dt.strptime(x[creation], time_format), reverse=True)
     for obj in time_sorted_snaps:
         db=obj[databaseName]
         if not db in snapshots:
@@ -41,7 +43,11 @@ def do_by_id(id,method):
         else:
             print(f'Response code: {response.status_code}')
 
-def main():
+def main(argv):
+    global server
+    server = argv[1]            #'https://5dbf2fb9e295da001400b4cc.mockapi.io'
+    global snapshots_path
+    snapshots_path = argv[2]    #'/api/v1/snapshots/'
     all_snaps=list_all_by_DB()
     for db_name in all_snaps:
         db=all_snaps[db_name]
@@ -52,4 +58,4 @@ def main():
 
     print("done")
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
